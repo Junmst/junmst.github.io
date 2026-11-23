@@ -44,6 +44,17 @@ const setNavState = () => nav?.classList.toggle('scrolled', window.scrollY > 12)
 setNavState();
 window.addEventListener('scroll', setNavState, { passive: true });
 
+const savedTheme = localStorage.getItem('personal-page-theme');
+if (savedTheme === 'dark') document.body.classList.add('theme-dark');
+document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+  button.addEventListener('click', () => {
+    const dark = document.body.classList.toggle('theme-dark');
+    localStorage.setItem('personal-page-theme', dark ? 'dark' : 'light');
+    button.textContent = dark ? '☼' : '◐';
+  });
+  button.textContent = document.body.classList.contains('theme-dark') ? '☼' : '◐';
+});
+
 const revealItems = document.querySelectorAll('.reveal');
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries, currentObserver) => {
