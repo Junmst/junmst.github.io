@@ -31,8 +31,8 @@
           } else if (dark) {
             set('--accent-soft', 'rgba(136, 136, 136, 0.2)');
           }
-          var op = Number(localStorage.getItem('shiji.panel-opacity'));
-          if (!isFinite(op)) op = 0.82;
+          var op = Number(localStorage.getItem('shiji.demo.panel-opacity'));
+          if (!isFinite(op)) op = 0.01;
           op = Math.max(0, Math.min(1, op));
           if (dark) {
             set('color-scheme', 'dark');
@@ -63,8 +63,8 @@
         } catch (e) { /* 主题预加载失败时回退默认样式 */ }
       })();
     </script>
-    <script type="module" crossorigin src="./assets/index-3SOuIyE5.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-mF_Y6K4A.css">
+    <script type="module" crossorigin src="./assets/index-CRBCyr1G.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CnGeVZ5n.css">
   </head>
   <body>
     <div id="root"></div>
