@@ -1,3 +1,23 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>时迹 — 作品</title><link rel="stylesheet" href="styles.css"></head>
-<body><header class="site-nav"><div class="nav-shell"><a class="brand" href="index.html"><span class="brand-mark">P</span><span>个人主页</span></a><nav class="nav-links"><a href="index.html">首页</a><a href="calligraphy.html">书法</a><a href="life.html">生活</a><a class="active" href="works.html">作品</a><a href="contact.html">联系</a></nav><a class="nav-profile" href="profile.html">资料 ↗</a></div></header><main class="project-detail section-shell"><p class="eyebrow">WORK / 02</p><h1>时迹</h1><a class="back-link" href="works.html">← 返回作品</a></main><footer class="site-footer section-shell"><span>© 2026 PERSONAL ARCHIVE</span><a href="index.html">返回首页 ↑</a></footer></body></html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>时迹 — Web App Demo</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="demo.css">
+</head>
+<body class="demo-page">
+  <div class="demo-shell">
+    <header class="demo-topbar"><a class="demo-product" href="works.html"><span class="demo-product-mark">时</span><span>时迹 / Time Trace</span></a><div class="demo-top-actions"><span>LOCAL DEMO · SAMPLE DATA</span><a class="demo-back" href="works.html">返回作品 ↗</a></div></header>
+    <main class="shiji-layout">
+      <aside class="shiji-sidebar"><p class="shiji-sidebar-label">日期</p><a class="shiji-day active" href="#today">今天<small>11 / 23</small></a><a class="shiji-day" href="#yesterday">昨天<small>11 / 22</small></a><a class="shiji-day" href="#older">11 月 21 日<small>周六</small></a></aside>
+      <section class="shiji-main" id="today">
+        <p class="demo-kicker">Daily rhythm / 2026.11.23</p><h1 class="demo-heading">把时间，<em>看见。</em></h1>
+        <div class="shiji-summary"><div class="summary-item"><span class="summary-label">今日专注</span><strong class="summary-value">06h 40m</strong><span class="summary-note">比昨天多 42 分钟</span></div><div class="summary-item"><span class="summary-label">记录数量</span><strong class="summary-value" id="record-count">4 项</strong></div><div class="summary-item"><span class="summary-label">当前节奏</span><strong class="summary-value">稳定</strong></div></div>
+        <div class="shiji-toolbar"><div class="shiji-filter"><button class="filter-button active" data-filter="all">全部</button><button class="filter-button" data-filter="work">工作</button><button class="filter-button" data-filter="life">生活</button></div><button class="demo-button primary" id="add-record">+ 新增记录</button></div>
+        <div class="timeline" id="timeline" aria-live="polite"></div>
+      </section>
+    </main>
+    <footer class="demo-footer"><span>时迹 · 前端演示，数据来自本地样例</span><span><a href="https://github.com/Junmst" target="_blank" rel="noreferrer">下载 / GitHub ↗</a>　<a href="https://gitee.com/junmarvel" target="_blank" rel="noreferrer">Gitee ↗</a></span></footer>
+  </div>
+  <script src="demo.js" defer></script>
+</body>
+</html>
