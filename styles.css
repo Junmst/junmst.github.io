@@ -139,8 +139,8 @@ body.theme-dark .project-grid { background: #302f2c; }
 @media (max-width: 560px) {
   :root { --shell: calc(100% - 32px); }
   .nav-shell { width: calc(100% - 32px); }
-  .nav-links { font-size: 10px; }
-  .nav-links a { padding-left: 3px; padding-right: 3px; }
+  .nav-links { font-size: 12px; }
+  .nav-links a { padding-left: 6px; padding-right: 6px; }
   .home-main { padding-top: 65px; }
   h1 { font-size: clamp(54px, 16vw, 78px); }
   .home-index strong { font-size: 26px; }
