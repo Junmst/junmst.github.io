@@ -4,21 +4,21 @@ const projects = [
     name: 'earloop',
     language: 'WEB / APP',
     description: '',
-    url: ''
+    url: 'earloop.html'
   },
   {
     source: 'PROJECT',
     name: '时迹',
     language: 'PRODUCT',
     description: '',
-    url: ''
+    url: 'shiji.html'
   },
   {
     source: 'PROJECT',
     name: '我的web',
     language: 'WEB',
     description: '',
-    url: ''
+    url: 'myweb.html'
   }
 ];
 
