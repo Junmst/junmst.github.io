@@ -9,11 +9,11 @@
       (function () {
         try {
           var root = document.documentElement;
-          var mode = localStorage.getItem('shiji.mode');
-          var dark = mode === 'dark' || ((mode === null || mode === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var mode = localStorage.getItem('shiji.mode') || 'light';
+          var dark = mode === 'dark';
           var set = function (name, value) { root.style.setProperty(name, value); };
           var mixCh = function (v, ratio) { return Math.round(v + (255 - v) * ratio); };
-          var hex = (localStorage.getItem('shiji.accent') || '').trim().replace('#', '');
+          var hex = (localStorage.getItem('shiji.accent') || 'A1C7FF').trim().replace('#', '');
           if (hex.length === 8) hex = hex.slice(2);
           if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
           var r = 0, g = 0, b = 0;
@@ -63,8 +63,8 @@
         } catch (e) { /* 主题预加载失败时回退默认样式 */ }
       })();
     </script>
-    <script type="module" crossorigin src="./assets/index-haFpbk06.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CnGeVZ5n.css">
+    <script type="module" crossorigin src="./assets/index-CHvEU0Ku.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-ucvA9VVJ.css">
   </head>
   <body>
     <div id="root"></div>
