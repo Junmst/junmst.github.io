@@ -1202,7 +1202,7 @@ function applyDrag(clientX){
   if(Math.abs(clientX-gesture.startX)>4) gesture.moved=true;
   const now=performance.now();
   const el=Math.max(1,now-gesture.lastT);
-  gesture.velocity=gesture.velocity*0.55+(dx/el)*0.45;
+  gesture.velocity=gesture.velocity*0.42+(dx/el)*0.58;
   gesture.lastT=now; gesture.lastX=clientX;
   const deltaMs=-dx/(canvasW||1)*visible;
   gesture.dragMs=clampPos(rec.durationMs,gesture.dragMs+deltaMs);
@@ -1221,7 +1221,7 @@ function beginDrag(x){
 function finishDrag(x){
   if(gesture.mode!=='drag') return;
   if(!gesture.moved) seekTo(x);
-  else if(Math.abs(gesture.velocity)>=0.60) startInertia();
+  else if(Math.abs(gesture.velocity)>=0.18) startInertia();
   gesture.mode=null;
 }
 function pinchSpan(){
@@ -1299,11 +1299,11 @@ function startInertia(){
   stopInertia();
   function frame(now){
     const el=Math.max(1,now-prev); prev=now;
-    const dx=velocity*el;
+    const dx=velocity*el*1.85;
     const next=Math.max(0,Math.min(rec.durationMs,pos-dx/canvasW*visible));
     if(next===pos){return;}
     pos=next; ds.positionMs=pos;
-    velocity*=Math.exp(-el/180);
+    velocity*=Math.exp(-el/420);
     renderDetailTime(); drawWave();
     if(Math.abs(velocity)>0.01) gesture.inertia=requestAnimationFrame(frame);
   }
