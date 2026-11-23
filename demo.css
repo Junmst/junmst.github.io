@@ -101,3 +101,56 @@
   .earloop-art { width: min(190px, 100%); }
   .earloop-presets { grid-template-columns: 1fr; }
 }
+
+/* EarLoop: 对应 Android Compose 中的录音 / 监听 / 调音 / 设备四个主页面 */
+.earloop-screen { padding: 48px 0 78px; }
+.earloop-tabs { display: flex; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--demo-line); }
+.earloop-app-tab { padding: 10px 20px; border: 0; border-radius: 999px; background: transparent; color: var(--demo-muted); font: 12px var(--sans); cursor: pointer; }
+.earloop-app-tab.active, .earloop-app-tab:hover { background: var(--demo-dark); color: var(--demo-bg); }
+.earloop-app-panel { padding-top: 42px; }
+.earloop-app-panel.hidden { display: none; }
+.earloop-panel-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 34px; }
+.earloop-head-actions { display: flex; align-items: center; gap: 14px; }
+.earloop-status { display: inline-flex; align-items: center; gap: 7px; color: var(--demo-muted); font: 10px var(--mono); }
+.earloop-status i { width: 7px; height: 7px; border-radius: 50%; background: var(--demo-green); }
+.earloop-status.recording i { background: var(--demo-accent); box-shadow: 0 0 0 5px rgba(200, 77, 43, .12); }
+.earloop-meter-card { display: grid; grid-template-columns: 170px minmax(0, 1fr) auto; gap: 24px; align-items: center; padding: 20px; background: var(--demo-panel); border: 1px solid var(--demo-line); }
+.earloop-label { display: block; color: var(--demo-muted); font: 10px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.earloop-meter-card strong { display: block; margin-top: 5px; font: 400 20px var(--serif); }
+.level-meter { display: flex; align-items: center; gap: 4px; height: 34px; }
+.level-meter span { flex: 1; height: 9px; background: var(--demo-line); }
+.level-meter span:nth-child(-n+7) { background: var(--demo-dark); }
+.level-meter span:nth-child(8) { background: var(--demo-accent); }
+.earloop-record-list { margin-top: 24px; border-top: 1px solid var(--demo-line); }
+.earloop-list-head { display: flex; justify-content: space-between; padding: 15px 0; color: var(--demo-muted); font: 10px var(--mono); text-transform: uppercase; }
+.ear-record-row { display: grid; grid-template-columns: 38px 1fr auto; gap: 14px; align-items: center; width: 100%; padding: 18px 8px; border: 0; border-top: 1px solid var(--demo-line); background: transparent; color: var(--demo-dark); text-align: left; cursor: pointer; }
+.ear-record-row:hover, .ear-record-row.active { background: rgba(200, 77, 43, .06); }
+.record-play { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--demo-line); border-radius: 50%; font-size: 10px; }
+.ear-record-row strong { display: block; font: 400 20px var(--serif); }
+.ear-record-row small, .ear-record-row time { color: var(--demo-muted); font: 10px var(--mono); }
+.earloop-listen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ear-device-card { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 24px; background: var(--demo-panel); border: 1px solid var(--demo-line); }
+.ear-device-card strong { font: 400 25px var(--serif); }
+.ear-device-card small { color: var(--demo-muted); font: 10px var(--mono); }
+.ear-wave-panel { padding: 24px; background: var(--demo-panel); border: 1px solid var(--demo-line); }
+.ear-wave-top { display: flex; justify-content: space-between; color: var(--demo-muted); font: 10px var(--mono); }
+.ear-waveform { display: flex; align-items: center; gap: 3px; height: 160px; margin: 24px 0; padding: 0 8px; border-top: 1px solid var(--demo-line); border-bottom: 1px solid var(--demo-line); }
+.ear-waveform span { flex: 1; min-width: 3px; height: var(--height); background: linear-gradient(var(--demo-accent), rgba(200, 77, 43, .28)); border-radius: 4px; }
+.ear-tune-tabs { display: flex; gap: 4px; margin-bottom: 20px; }
+.ear-tune-tabs button { padding: 8px 14px; border: 1px solid var(--demo-line); background: transparent; color: var(--demo-muted); font: 10px var(--mono); cursor: pointer; }
+.ear-tune-tabs button.active { background: var(--demo-dark); color: var(--demo-bg); }
+.ear-slider-row { display: grid; grid-template-columns: 80px 1fr 50px; gap: 16px; align-items: center; margin-top: 16px; font-size: 12px; }
+.ear-slider-row input { width: 100%; accent-color: var(--demo-accent); }
+.ear-slider-row strong { color: var(--demo-muted); font: 10px var(--mono); text-align: right; }
+.ear-device-table { border-top: 1px solid var(--demo-line); }
+.ear-device-table > div { display: grid; grid-template-columns: 100px 1fr 1fr; gap: 16px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--demo-line); }
+.ear-device-table span, .ear-device-table small { color: var(--demo-muted); font: 10px var(--mono); }
+.ear-device-table strong { font: 400 22px var(--serif); }
+.is-ear-recording .earloop-status i { background: var(--demo-accent); }
+
+@media (max-width: 760px) {
+  .earloop-panel-head { align-items: flex-start; flex-direction: column; }
+  .earloop-meter-card, .earloop-listen-grid { grid-template-columns: 1fr; }
+  .earloop-meter-card .earloop-label:last-child { order: 3; }
+  .ear-device-table > div { grid-template-columns: 1fr; gap: 6px; }
+}
