@@ -1221,7 +1221,7 @@ function beginDrag(x){
 function finishDrag(x){
   if(gesture.mode!=='drag') return;
   if(!gesture.moved) seekTo(x);
-  else if(Math.abs(gesture.velocity)>=0.18) startInertia();
+  else if(Math.abs(gesture.velocity)>=0.08) startInertia();
   gesture.mode=null;
 }
 function pinchSpan(){
@@ -1299,11 +1299,11 @@ function startInertia(){
   stopInertia();
   function frame(now){
     const el=Math.max(1,now-prev); prev=now;
-    const dx=velocity*el*1.85;
+    const dx=velocity*el*3.8;
     const next=Math.max(0,Math.min(rec.durationMs,pos-dx/canvasW*visible));
     if(next===pos){return;}
     pos=next; ds.positionMs=pos;
-    velocity*=Math.exp(-el/420);
+    velocity*=Math.exp(-el/620);
     renderDetailTime(); drawWave();
     if(Math.abs(velocity)>0.01) gesture.inertia=requestAnimationFrame(frame);
   }
@@ -1344,12 +1344,13 @@ function bindSlider(el,onChange){
 /* ============================================================
  * 导航与菜单
  * ============================================================ */
+const renderedPanels=new Set(['RECORDINGS']);
 document.getElementById('tabs').addEventListener('click',e=>{
   const t=e.target.closest('.tab'); if(!t) return;
   app.tab=t.dataset.tab; renderTabs();
-  if(app.tab==='LISTEN') renderListen();
-  if(app.tab==='TUNE') renderTune();
-  if(app.tab==='DEVICE') renderDevice();
+  if(app.tab==='LISTEN'&&!renderedPanels.has('LISTEN')){ renderListen(); renderedPanels.add('LISTEN'); }
+  if(app.tab==='TUNE'&&!renderedPanels.has('TUNE')){ renderTune(); renderedPanels.add('TUNE'); }
+  if(app.tab==='DEVICE'&&!renderedPanels.has('DEVICE')){ renderDevice(); renderedPanels.add('DEVICE'); }
 });
 
 const recBox=document.getElementById('panel-recordings');
