@@ -192,6 +192,8 @@
     overflow: hidden;
     text-overflow: ellipsis;      /* 极窄时省略号兜底 */
   }
+  .info-list .email-row { grid-column: 1 / -1; }
+  .info-list .email-row span { overflow: visible; text-overflow: clip; white-space: normal; }
   .info-list a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--gold-soft); }
   .info-list a:hover { color: var(--accent); border-color: var(--accent); }
   .info-list i { color: var(--muted); font-style: normal; margin: 0 5px; }
@@ -444,7 +446,7 @@
         <p>闲暇时间我喜欢走向户外——滑雪、游泳、滑板；安静下来时则练练书法、弹弹吉他。</p>
       </div>
       <ul class="info-list">
-        <li><b>邮箱</b><span><a href="mailto:ZJ030906@outlook.com">ZJ030906@outlook.com</a><i>/</i><a href="mailto:Jun396@qq.com">Jun396@qq.com</a></span></li>
+        <li class="email-row"><b>邮箱</b><span><a href="mailto:ZJ030906@outlook.com">ZJ030906@outlook.com</a><i>/</i><a href="mailto:Jun396@qq.com">Jun396@qq.com</a></span></li>
       </ul>
     </div>
 
