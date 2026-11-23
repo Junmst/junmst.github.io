@@ -4,6 +4,33 @@ if (bars) {
   bars.innerHTML = heights.map((height, index) => `<span class="wave-bar${index < 13 ? ' active' : ''}" style="--height:${height}%"></span>`).join('');
 }
 
+const earWaveform = document.querySelector('#ear-waveform');
+if (earWaveform) {
+  const heights = [20, 35, 52, 30, 68, 44, 76, 36, 58, 82, 42, 28, 65, 50, 74, 32, 55, 86, 46, 62, 34, 72, 40, 58, 78, 27, 48, 66, 38, 80, 52, 30, 70, 45, 60, 35, 75, 50, 68, 42, 82, 36];
+  earWaveform.innerHTML = heights.map((height) => `<span style="--height:${height}%"></span>`).join('');
+}
+
+document.querySelectorAll('.earloop-app-tab').forEach((tab) => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.earloop-app-tab').forEach((item) => item.classList.remove('active'));
+    document.querySelectorAll('.earloop-app-panel').forEach((panel) => panel.classList.add('hidden'));
+    tab.classList.add('active');
+    document.querySelector(`[data-ear-panel="${tab.dataset.earTab}"]`)?.classList.remove('hidden');
+  });
+});
+
+const recordButton = document.querySelector('#ear-record-button');
+const recordStatus = document.querySelector('#ear-record-status');
+if (recordButton && recordStatus) {
+  let recording = false;
+  recordButton.addEventListener('click', () => {
+    recording = !recording;
+    recordButton.textContent = recording ? '停止录音' : '开始录音';
+    recordStatus.textContent = recording ? '正在录音 · 00:08' : '等待开始';
+    document.querySelector('.earloop-status')?.classList.toggle('recording', recording);
+  });
+}
+
 const playButton = document.querySelector('#play-button');
 if (playButton) {
   let playing = false;
