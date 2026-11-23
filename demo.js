@@ -97,11 +97,13 @@ document.querySelector('#add-record')?.addEventListener('click', () => {
 
 const previewTitle = document.querySelector('#preview-title');
 const previewCopy = document.querySelector('#preview-copy');
+const previewLink = document.querySelector('#preview-link');
 document.querySelectorAll('[data-preview]').forEach((button) => {
   button.addEventListener('click', () => {
     document.querySelectorAll('[data-preview]').forEach((item) => item.classList.remove('active'));
     button.classList.add('active');
     if (previewTitle) previewTitle.textContent = button.dataset.preview;
     if (previewCopy) previewCopy.textContent = button.dataset.copy;
+    if (previewLink) previewLink.href = button.dataset.url;
   });
 });
