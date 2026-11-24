@@ -46,6 +46,16 @@ body{
 .earloop-project-actions a:first-child{background:#f2f2f2;color:#101010;border-color:#f2f2f2;}
 .earloop-project-actions a:hover{border-color:#a1c7ff;transform:translateY(-2px);}
 .earloop-phone-stage{display:flex;justify-content:center;align-items:center;min-width:390px;}
+@media (max-width: 820px){
+  body{padding:24px 16px;}
+  .earloop-project-shell{display:block;min-height:0;}
+  .earloop-project-intro{max-width:620px;margin:0 auto 34px;}
+  .earloop-project-intro h1{font-size:64px;}
+  .earloop-phone-stage{min-width:0;}
+}
+/* ===== 展台说明（外壳外，非 App 界面） ===== */
+.stage-note{position:fixed;left:24px;top:24px;color:#555;font-size:13px;line-height:1.7;}
+.stage-note b{color:#999;font-weight:600;}
 
 /* ===== 真机外壳 ===== */
 .phone{
@@ -55,13 +65,6 @@ body{
   box-shadow:0 30px 80px rgba(0,0,0,.75), inset 0 0 0 2px #0a0a0a;
   display:flex;flex-direction:column;overflow:hidden;
   transform-origin:center center;
-}
-@media (max-width: 820px){
-  body{padding:24px 16px;}
-  .earloop-project-shell{display:block;min-height:0;}
-  .earloop-project-intro{max-width:620px;margin:0 auto 34px;}
-  .earloop-project-intro h1{font-size:64px;}
-  .earloop-phone-stage{min-width:0;}
 }
 .phone::before{ /* 侧边电源键 */
   content:"";position:absolute;right:-11px;top:170px;width:3px;height:96px;
@@ -194,6 +197,8 @@ body{
 .swipe-actions button svg{width:18px;height:18px;}
 .swipe-actions button.act-lock{background:var(--raised);}
 .swipe-actions button.act-delete{background:#3a2323;color:var(--error);}
+.swipe-actions button:disabled{opacity:.35;cursor:not-allowed;}
+.swipe-actions button:disabled svg{opacity:.6;}
 .rec-swipe .rec-card{transition:transform .22s ease;}
 .rec-swipe.dragging .rec-card{transition:none;}
 .rec-swipe.open .rec-card{transform:translateX(-168px);}
@@ -245,6 +250,7 @@ body{
 }
 .dropdown button{display:block;width:100%;height:40px;padding:0 12px;background:transparent;border:none;border-bottom:1px solid rgba(68,68,68,.55);color:var(--text);font-size:14px;text-align:left;cursor:pointer;}
 .dropdown button:last-child{border-bottom:none;}
+.dropdown button:disabled{opacity:.35;cursor:not-allowed;}
 
 .wavezone{flex:1;min-height:0;display:flex;flex-direction:column;padding:2px 10px 0;user-select:none;-webkit-user-select:none;}
 #wave-canvas{flex:1;min-height:0;width:100%;display:block;touch-action:none;}
@@ -259,7 +265,7 @@ body{
 .detail-bottom{flex:none;padding:0 10px 14px;display:flex;flex-direction:column;gap:10px;}
 .detail-tabs{display:flex;gap:10px;}
 .detail-tabs button{
-  flex:1;height:40px;border-radius:14px;border:none;font-size:14px;cursor:pointer;color:var(--text);
+  flex:1;height:42px;border-radius:14px;border:none;font-size:15px;cursor:pointer;color:var(--text);
   background:var(--raised);transition:background .16s ease,color .16s ease,transform .12s ease;
 }
 .detail-tabs button:hover{background:var(--high);}
@@ -269,6 +275,7 @@ body{
 .ctl-inner{width:100%;display:flex;flex-direction:column;justify-content:center;gap:14px;}
 .ctl-inner.in-right{animation:ctlInR .18s ease;}
 .ctl-inner.in-left{animation:ctlInL .18s ease;}
+.ctl-inner.locked .q-toggle,.ctl-inner.locked .denoise-action,.ctl-inner.locked .slider,.ctl-inner.locked .align-btns button{opacity:.38;pointer-events:none;}
 @keyframes ctlInR{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:none;}}
 @keyframes ctlInL{from{opacity:0;transform:translateX(-14px);}to{opacity:1;transform:none;}}
 .view{animation:viewIn .2s ease;}
@@ -478,9 +485,9 @@ body{
     </div>
   </div>
 </div>
-</div>
-</div>
 
+  </div>
+</div>
 <script>
 /* ============================================================
  * 状态模型：普通对象 + 重渲染，不依赖任何框架
@@ -661,9 +668,9 @@ function renderRecordings(){
     return `<div class="rec-swipe" data-swipe="${r.id}">
       <div class="swipe-actions">
         <button data-sact="share" data-id="${r.id}">${actShare}<span>分享</span></button>
-        <button data-sact="rename" data-id="${r.id}">${actPen}<span>重命名</span></button>
+        <button data-sact="rename" data-id="${r.id}" ${r.locked?'disabled':''}>${actPen}<span>重命名</span></button>
         <button class="act-lock" data-sact="lock" data-id="${r.id}">${actLock}<span>${r.locked?'解锁':'加锁'}</span></button>
-        <button class="act-delete" data-sact="delete" data-id="${r.id}">${actTrash}<span>回收</span></button>
+        <button class="act-delete" data-sact="delete" data-id="${r.id}" ${r.locked?'disabled':''}>${actTrash}<span>回收</span></button>
       </div>
       <div class="rec-card ${checked?'sel':''}" data-rec="${r.id}">
       <div class="main">
@@ -699,9 +706,13 @@ function handleSel(act){
     exportSheet(chosen,exitSelection); return;
   }
   if(act==='delete'){
-    const ids=new Set(app.selected);
-    for(let i=RECORDINGS.length-1;i>=0;i--){ if(ids.has(RECORDINGS[i].id)) RECORDINGS.splice(i,1); }
-    infoDialog('回收',`已回收 ${ids.size} 个录音（演示）。`);
+    const chosen=RECORDINGS.filter(r=>app.selected.includes(r.id));
+    const locked=chosen.filter(r=>r.locked);
+    const removable=chosen.filter(r=>!r.locked);
+    removable.forEach(r=>RECORDINGS.splice(RECORDINGS.indexOf(r),1));
+    let msg=`已回收 ${removable.length} 个录音。`;
+    if(locked.length) msg+=`\n跳过 ${locked.length} 个锁定录音。`;
+    infoDialog('回收',msg);
     exitSelection();
   }
 }
@@ -906,6 +917,7 @@ function renderDetailTabs(){
 function renderDetailControls(dir='in-right', animate=true){
   const rec=currentRec(); const ds=currentDs(); const box=document.getElementById('ctl-inner');
   if(animate){ box.classList.remove('in-left','in-right'); void box.offsetWidth; box.classList.add(dir); }
+  box.classList.toggle('locked', !!rec.locked);
   if(ds.tab==='DENOISE'){
     const chs=[{title:'麦克风',sel:'selMic',st:'stMic',has:true},{title:'内录',sel:'selSystem',st:'stSystem',has:rec.dual}];
     box.innerHTML=chs.map(c=>{
@@ -937,12 +949,14 @@ function renderDetailControls(dir='in-right', animate=true){
       drawWave();
     });
     box.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{
+      if(rec.locked) return;
       const k=b.dataset.q; if(ds[k]==='NONE') return;
       ds[k]=ds[k]==='MOSS_FORMER_HIGH'?'MOSS_FORMER':'MOSS_FORMER_HIGH';
       b.textContent=ds[k]==='MOSS_FORMER_HIGH'?'高质':'标准';
       drawWave();
     });
     box.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>{
+      if(rec.locked) return;
       const row=b.closest('.denoise-row'); const stKey=row.dataset.ch;
       const act=b.dataset.act;
       if(act==='cancel'){ ds[stKey]='IDLE'; renderDetailControls('in-right',false); }
@@ -957,6 +971,7 @@ function renderDetailControls(dir='in-right', animate=true){
       ${volSlider('麦克风','micGainDb',ds.micGainDb,peakToRefDb(peakOfArr(rec.mic)))}
       ${rec.dual?volSlider('系统音频','sysGainDb',ds.sysGainDb,peakToRefDb(peakOfArr(rec.sys))):''}`;
     box.querySelectorAll('[data-vol]').forEach(el=>bindSlider(el,v=>{
+      if(rec.locked) return;
       ds[el.dataset.vol]=v;
       el.querySelector('.fill').style.width=((v-(-60))/(20-(-60)))*100+'%';
       el.querySelector('.thumb').style.left=((v-(-60))/(20-(-60)))*100+'%';
@@ -984,11 +999,11 @@ function renderDetailControls(dir='in-right', animate=true){
         ${[1,5,10].map(d=>`<button data-step="${d}">+${d}</button>`).join('')}
       </div>`;
     const slider=box.querySelector('[data-align]');
-    bindSlider(slider,v=>{ds.syncOffsetMs=Math.round(v);refreshAlign();drawWave();});
+    bindSlider(slider,v=>{if(rec.locked) return; ds.syncOffsetMs=Math.round(v);refreshAlign();drawWave();});
     box.querySelectorAll('[data-step]').forEach(b=>{
       let delay=null,timer=null;
       const clear=()=>{clearTimeout(delay);clearInterval(timer);delay=null;timer=null;};
-      const fire=()=>{const d=parseInt(b.dataset.step,10);
+      const fire=()=>{if(rec.locked) return;const d=parseInt(b.dataset.step,10);
         ds.syncOffsetMs=d===0?0:Math.max(-2000,Math.min(2000,ds.syncOffsetMs+d));
         refreshAlign();drawWave();};
       b.addEventListener('pointerdown',()=>{fire();delay=setTimeout(()=>{timer=setInterval(fire,90);},350);});
@@ -1202,7 +1217,7 @@ function applyDrag(clientX){
   if(Math.abs(clientX-gesture.startX)>4) gesture.moved=true;
   const now=performance.now();
   const el=Math.max(1,now-gesture.lastT);
-  gesture.velocity=gesture.velocity*0.42+(dx/el)*0.58;
+  gesture.velocity=gesture.velocity*0.55+(dx/el)*0.45;
   gesture.lastT=now; gesture.lastX=clientX;
   const deltaMs=-dx/(canvasW||1)*visible;
   gesture.dragMs=clampPos(rec.durationMs,gesture.dragMs+deltaMs);
@@ -1221,7 +1236,7 @@ function beginDrag(x){
 function finishDrag(x){
   if(gesture.mode!=='drag') return;
   if(!gesture.moved) seekTo(x);
-  else if(Math.abs(gesture.velocity)>=0.03) startInertia();
+  else if(Math.abs(gesture.velocity)>=0.60) startInertia();
   gesture.mode=null;
 }
 function pinchSpan(){
@@ -1296,15 +1311,14 @@ function stopInertia(){ if(gesture.inertia){cancelAnimationFrame(gesture.inertia
 function startInertia(){
   const {rec,ds,visible}=visibleState();
   let velocity=gesture.velocity, prev=performance.now(), pos=gesture.dragMs;
-  if(Math.abs(velocity)<0.35) velocity=(velocity<0?-1:1)*0.35;
   stopInertia();
   function frame(now){
     const el=Math.max(1,now-prev); prev=now;
-    const dx=velocity*el*5.2;
+    const dx=velocity*el;
     const next=Math.max(0,Math.min(rec.durationMs,pos-dx/canvasW*visible));
     if(next===pos){return;}
     pos=next; ds.positionMs=pos;
-    velocity*=Math.exp(-el/720);
+    velocity*=Math.exp(-el/180);
     renderDetailTime(); drawWave();
     if(Math.abs(velocity)>0.01) gesture.inertia=requestAnimationFrame(frame);
   }
@@ -1345,13 +1359,12 @@ function bindSlider(el,onChange){
 /* ============================================================
  * 导航与菜单
  * ============================================================ */
-const renderedPanels=new Set(['RECORDINGS']);
 document.getElementById('tabs').addEventListener('click',e=>{
   const t=e.target.closest('.tab'); if(!t) return;
   app.tab=t.dataset.tab; renderTabs();
-  if(app.tab==='LISTEN'&&!renderedPanels.has('LISTEN')){ renderListen(); renderedPanels.add('LISTEN'); }
-  if(app.tab==='TUNE'&&!renderedPanels.has('TUNE')){ renderTune(); renderedPanels.add('TUNE'); }
-  if(app.tab==='DEVICE'&&!renderedPanels.has('DEVICE')){ renderDevice(); renderedPanels.add('DEVICE'); }
+  if(app.tab==='LISTEN') renderListen();
+  if(app.tab==='TUNE') renderTune();
+  if(app.tab==='DEVICE') renderDevice();
 });
 
 const recBox=document.getElementById('panel-recordings');
@@ -1448,9 +1461,15 @@ recBox.addEventListener('click',e=>{
 function handleSact(act,id){
   const rec=RECORDINGS.find(r=>r.id===id); if(!rec) return;
   if(act==='share'){ exportSheet(rec); }
-  else if(act==='rename'){ promptDialog('重命名录音',rec.name,v=>{rec.name=v;renderRecordings();}); }
+  else if(act==='rename'){
+    if(rec.locked){ infoDialog('重命名','录音已锁定，无法重命名。'); return; }
+    promptDialog('重命名录音',rec.name,v=>{rec.name=v;renderRecordings();});
+  }
   else if(act==='lock'){ rec.locked=!rec.locked; renderRecordings(); }
-  else if(act==='delete'){ RECORDINGS.splice(RECORDINGS.indexOf(rec),1); infoDialog('回收',`已回收「${rec.name}」（演示）。`); renderRecordings(); }
+  else if(act==='delete'){
+    if(rec.locked){ infoDialog('回收','录音已锁定，无法回收。'); return; }
+    RECORDINGS.splice(RECORDINGS.indexOf(rec),1); infoDialog('回收',`已回收「${rec.name}」（演示）。`); renderRecordings();
+  }
 }
 
 document.getElementById('detail-back').onclick=closeDetail;
@@ -1458,7 +1477,11 @@ document.getElementById('detail-play').onclick=togglePlayback;
 
 document.getElementById('detail-menu').onclick=e=>{
   e.stopPropagation();
-  document.getElementById('detail-dropdown').classList.toggle('open');
+  const dd=document.getElementById('detail-dropdown');
+  dd.classList.toggle('open');
+  const rec=currentRec();
+  const rn=dd.querySelector('[data-act="rename"]');
+  if(rn) rn.disabled=!!(rec&&rec.locked);
 };
 document.addEventListener('click',()=>document.getElementById('detail-dropdown').classList.remove('open'));
 
@@ -1467,7 +1490,10 @@ document.getElementById('detail-dropdown').addEventListener('click',e=>{
   document.getElementById('detail-dropdown').classList.remove('open');
   const rec=currentRec();
   if(b.dataset.act==='tracks'){ openTracks(rec); }
-  else if(b.dataset.act==='rename'){ promptDialog('重命名录音',rec.name,v=>{rec.name=v;document.getElementById('detail-title').textContent=v;renderRecordings();}); }
+  else if(b.dataset.act==='rename'){
+    if(rec.locked){ infoDialog('重命名','录音已锁定，无法重命名。'); return; }
+    promptDialog('重命名录音',rec.name,v=>{rec.name=v;document.getElementById('detail-title').textContent=v;renderRecordings();});
+  }
   else if(b.dataset.act==='details'){ infoDialog('详情',`名称：${rec.name}.wav\n时长：${fmtDuration(rec.durationMs)}\n输入：${rec.channels} · ${rec.sampleRate}`); }
   else if(b.dataset.act==='export'){ exportSheet(rec); }
   else if(b.dataset.act==='layout'){ infoDialog('切换布局','布局已在 v1 / v2 间切换（演示）。'); }
@@ -1622,3 +1648,5 @@ window.addEventListener('resize',()=>{ fitPhone(); if(app.view==='detail') resiz
 </script>
 </body>
 </html>
+
+
